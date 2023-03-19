@@ -13,7 +13,8 @@ class TicketControl extends React.Component{
       formVisibleOnPage: false,
       helpQuestionOne: false,
       helpQuestionTwo: false,
-      helpQuestionThree: false
+      helpQuestionThree: false,
+      mainTicketList: []
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -40,6 +41,14 @@ class TicketControl extends React.Component{
     this.setState(prevState => ({
       helpQuestionThree: !prevState.helpQuestionThree
     }));
+  }
+
+  handleAddingNewTicketToList = (newTicket) => {
+    const newMainTicketList = this.state.mainTicketList.concat(newTicket);
+    this.setState({
+      mainTicketList: newMainTicketList,
+      formVisibleOnPage: false 
+    });
   }
 
   handleFormReset = () => {
@@ -74,12 +83,12 @@ class TicketControl extends React.Component{
         button = <button onClick={this.handleQ3Click}>{buttonText}</button>;
         buttonNo = <button onClick={this.handleFormReset}>No</button>;
       } else {
-        currentlyVisibleState = <NewTicketForm />;
+        currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList} />;
         buttonText = "Return to Ticket List";
         button = <button onClick={this.handleFormReset}>{buttonText}</button>;
       }
     } else {
-      currentlyVisibleState = <TicketList />
+      currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} />;
       buttonText = "Add Ticket";
       button = <button onClick={this.handleClick}>{buttonText}</button>
     }
