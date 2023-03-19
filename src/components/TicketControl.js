@@ -14,10 +14,13 @@ class TicketControl extends React.Component{
       helpQuestionOne: false,
       helpQuestionTwo: false,
       helpQuestionThree: false,
+      selectedTicket: null,
       mainTicketList: []
     };
     this.handleClick = this.handleClick.bind(this);
   }
+
+  
 
   handleClick = () => {
     this.setState(prevState => ({
@@ -65,6 +68,11 @@ class TicketControl extends React.Component{
     let buttonText = null;
     let button = null;
     let buttonNo = null;
+
+    const buttonStyles = {
+      padding: '50px',
+      margin: '20px'
+    }
     
     if (this.state.formVisibleOnPage) {
       if (!this.state.helpQuestionOne) {
@@ -95,9 +103,12 @@ class TicketControl extends React.Component{
 
     return (
       <React.Fragment>
-        {currentlyVisibleState}
-        {button}
-        {buttonNo}
+        <div style={buttonStyles}>
+          {currentlyVisibleState}
+          {button}
+          <br />
+          {buttonNo}
+        </div>
       </React.Fragment>
     );
   }

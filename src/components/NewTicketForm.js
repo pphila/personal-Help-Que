@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import { v4 } from "uuid";
 
 function NewTicketForm(props){
-  
+  const formStyling = {
+    padding: '25px',
+    textAlign: 'center'
+  }
   function handleNewTicketFormSubmission(e) {
     e.preventDefault();
     props.onNewTicketCreation({
@@ -16,20 +19,22 @@ function NewTicketForm(props){
   
   return(
     <React.Fragment>
-      <form onSubmit={handleNewTicketFormSubmission}>
-        <input
-          type="text"
-          name="names"
-          placeholder="Pair Names" />
-        <input
-          type="text"
-          name="location"
-          placeholder="Location" />
-        <textarea
-          name="issue"
-          placeholder="Describe your issue." />
-        <button type="submit">Help!</button>
-      </form>
+      <div style={formStyling}>
+        <form onSubmit={handleNewTicketFormSubmission}>
+          <input
+            type="text"
+            name="names"
+            placeholder="Pair Names" />
+          <input
+            type="text"
+            name="location"
+            placeholder="Location" />
+          <textarea
+            name="issue"
+            placeholder="Describe your issue." />
+          <button type="submit">Help!</button>
+        </form>
+      </div>
     </React.Fragment>
   );
 }
