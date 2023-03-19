@@ -4,7 +4,8 @@ function HelpQuestionTwo(props){
   const formStyling = {
     padding: '50px',
     marginLeft: "auto",
-    marginRight: "auto"
+    marginRight: "auto",
+    textAlign: 'center'
   }
   
   return(
