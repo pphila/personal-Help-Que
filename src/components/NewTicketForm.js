@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { v4 } from "uuid";
+import ReusableForm from "./ReusableForm";
 
 function NewTicketForm(props){
   const formStyling = {
@@ -20,22 +21,9 @@ function NewTicketForm(props){
   return(
     <React.Fragment>
       <div style={formStyling}>
-        <form onSubmit={handleNewTicketFormSubmission}>
-          <input
-            type="text"
-            name="names"
-            placeholder="Pair Names" />
-            <br/>
-          <input
-            type="text"
-            name="location"
-            placeholder="Location" />
-            <br/>
-          <textarea
-            name="issue"
-            placeholder="Describe your issue." />
-          <button type="submit">Help!</button>
-        </form>
+        <ReusableForm
+          formSubmissionHandler={handleNewTicketFormSubmission}
+          buttonText="Help!" />
       </div>
     </React.Fragment>
   );
