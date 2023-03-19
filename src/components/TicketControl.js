@@ -4,6 +4,7 @@ import HelpQuestionTwo from "./HelpQuestionTwo";
 import HelpQuestionThree from "./HelpQuestionThree";
 import NewTicketForm from "./NewTicketForm";
 import TicketList from "./TicketList";
+import TicketDetail from "./TicketDetail";
 
 class TicketControl extends React.Component{
 
@@ -14,13 +15,11 @@ class TicketControl extends React.Component{
       helpQuestionOne: false,
       helpQuestionTwo: false,
       helpQuestionThree: false,
-      selectedTicket: null,
-      mainTicketList: []
+      mainTicketList: [],
+      selectedTicket: null
     };
     this.handleClick = this.handleClick.bind(this);
   }
-
-  
 
   handleClick = () => {
     this.setState(prevState => ({
@@ -63,6 +62,11 @@ class TicketControl extends React.Component{
     })
   }
 
+  handleChangingSelectedTicket = (id) => {
+    const selectedTicket = this.state.mainTicketList.filter(ticket => ticket.id === id)[0];
+    this.setState({selectedTicket: selectedTicket});
+  }
+
   render(){
     let currentlyVisibleState = null;
     let buttonText = null;
@@ -71,34 +75,41 @@ class TicketControl extends React.Component{
 
     const buttonStyles = {
       padding: '50px',
-      margin: '20px'
+      margin: '200px',
+      alignElements: 'center'
     }
     
-    if (this.state.formVisibleOnPage) {
+    if (this.state.selectedTicket != null) {
+      currentlyVisibleState = <TicketDetail ticket = {this.state.selectedTicket} />
+      buttonText = "Return To Ticket List";
+      button = <button onClick={this.handClick}>{buttonText}</button>
+    } else if (this.state.formVisibleOnPage) {
+        
       if (!this.state.helpQuestionOne) {
-        currentlyVisibleState = <HelpQuestionOne />;
-        buttonText = "Yes";
-        button = <button onClick={this.handleQ1Click}>{buttonText}</button>;
-        buttonNo = <button onClick={this.handleFormReset}>No</button>;
-      } else if (!this.state.helpQuestionTwo) {
-        currentlyVisibleState = <HelpQuestionTwo />;
-        buttonText = "Yes";
-        button = <button onClick={this.handleQ2Click}>{buttonText}</button>;
-        buttonNo = <button onClick={this.handleFormReset}>No</button>;
-      } else if (!this.state.helpQuestionThree) {
-        currentlyVisibleState = <HelpQuestionThree />;
-        buttonText = "Yes";
-        button = <button onClick={this.handleQ3Click}>{buttonText}</button>;
-        buttonNo = <button onClick={this.handleFormReset}>No</button>;
-      } else {
-        currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList} />;
-        buttonText = "Return to Ticket List";
-        button = <button onClick={this.handleFormReset}>{buttonText}</button>;
-      }
+          currentlyVisibleState = <HelpQuestionOne />;
+          buttonText = "Yes";
+          button = <button onClick={this.handleQ1Click}>{buttonText}</button>;
+          buttonNo = <button onClick={this.handleFormReset}>No</button>;
+        } else if (!this.state.helpQuestionTwo) {
+          currentlyVisibleState = <HelpQuestionTwo />;
+          buttonText = "Yes";
+          button = <button onClick={this.handleQ2Click}>{buttonText}</button>;
+          buttonNo = <button onClick={this.handleFormReset}>No</button>;
+        } else if (!this.state.helpQuestionThree) {
+          currentlyVisibleState = <HelpQuestionThree />;
+          buttonText = "Yes";
+          button = <button onClick={this.handleQ3Click}>{buttonText}</button>;
+          buttonNo = <button onClick={this.handleFormReset}>No</button>;
+        } else {
+          currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList} />;
+          buttonText = "Return to Ticket List";
+          button = <button onClick={this.handleFormReset}>{buttonText}</button>;
+        }
+
     } else {
-      currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} />;
-      buttonText = "Add Ticket";
-      button = <button onClick={this.handleClick}>{buttonText}</button>
+        currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} />;
+        buttonText = "Add Ticket";
+        button = <button onClick={this.handleClick}>{buttonText}</button>
     }
 
     return (
