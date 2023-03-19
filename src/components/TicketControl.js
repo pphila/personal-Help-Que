@@ -22,9 +22,16 @@ class TicketControl extends React.Component{
   }
 
   handleClick = () => {
-    this.setState(prevState => ({
-      formVisibleOnPage: !prevState.formVisibleOnPage
-    }));
+  if (this.state.selectedTicket != null){
+    this.setState({
+      formVisibleOnPage: false,
+      selectedTicket: null
+    });
+  } else {
+      this.setState(prevState => ({
+        formVisibleOnPage: !prevState.formVisibleOnPage
+      }));
+    }
   }
 
   handleQ1Click = () => {
@@ -82,7 +89,7 @@ class TicketControl extends React.Component{
     if (this.state.selectedTicket != null) {
       currentlyVisibleState = <TicketDetail ticket = {this.state.selectedTicket} />
       buttonText = "Return To Ticket List";
-      button = <button onClick={this.handClick}>{buttonText}</button>
+      button = <button onClick={this.handleClick}>{buttonText}</button>
     } else if (this.state.formVisibleOnPage) {
         
       if (!this.state.helpQuestionOne) {
@@ -107,7 +114,7 @@ class TicketControl extends React.Component{
         }
 
     } else {
-        currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} />;
+        currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} onTicketSelection={this.handleChangingSelectedTicket} />;
         buttonText = "Add Ticket";
         button = <button onClick={this.handleClick}>{buttonText}</button>
     }

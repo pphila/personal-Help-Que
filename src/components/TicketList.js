@@ -40,7 +40,7 @@ function TicketList(props) {
 
 TicketList.propTypes = {
   ticketList: PropTypes.array,
-  onTicketSelectionL: PropTypes.func
+  onTicketSelection: PropTypes.func
 };
 
 export default TicketList;
