@@ -32,7 +32,7 @@ class TicketControl extends React.Component{
     });
   } else {
       this.setState(prevState => ({
-        formVisibleOnPage: !prevState.formVisibleOnPage
+        formVisibleOnPage: !prevState.formVisibleOnPage,
       }));
     }
   }
@@ -97,7 +97,7 @@ class TicketControl extends React.Component{
     this.setState({
       mainTicketList: editedMainTicketList,
       editing: false,
-      selecetedTicket: null
+      selectedTicket: null
     });
   }
 
@@ -116,7 +116,7 @@ class TicketControl extends React.Component{
     if (this.state.editing){
       currentlyVisibleState = <EditTicketForm 
                                 ticket = {this.state.selectedTicket}
-                                onEditTicket={this.handleEditingTicketInList}/>
+                                onEditTicket = {this.handleEditingTicketInList} />
       buttonText= "Return to Ticket List";
       button = <button onClick={this.handleClick}>{buttonText}</button>
     } else if (this.state.selectedTicket != null) {
