@@ -6,17 +6,16 @@ import NewTicketForm from "./NewTicketForm";
 import TicketList from "./TicketList";
 import TicketDetail from "./TicketDetail";
 import EditTicketForm from "./EditTicketForm";
+import { connect } from 'react-redux';
 
 class TicketControl extends React.Component{
 
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
       formVisibleOnPage: false,
-      helpQuestionOne: false,
-      helpQuestionTwo: false,
-      helpQuestionThree: false,
-      mainTicketList: [],
+      // mainTicketList: [],
       selectedTicket: null,
       editing: false
     };
@@ -37,30 +36,18 @@ class TicketControl extends React.Component{
     }
   }
 
-  handleQ1Click = () => {
-    this.setState(prevState => ({
-      helpQuestionOne: !prevState.helpQuestionOne
-    }));
-  }
-
-  handleQ2Click = () => {
-    this.setState(prevState => ({
-      helpQuestionTwo: !prevState.helpQuestionTwo
-    }));
-  }
-
-  handleQ3Click = () => {
-    this.setState(prevState => ({
-      helpQuestionThree: !prevState.helpQuestionThree
-    }));
-  }
-
   handleAddingNewTicketToList = (newTicket) => {
-    const newMainTicketList = this.state.mainTicketList.concat(newTicket);
-    this.setState({
-      mainTicketList: newMainTicketList,
-      formVisibleOnPage: false 
-    });
+    const { dispatch } = this.props;
+    const { id, names, location, issue} = newTicket;
+    const action = {
+      type: "ADD_TICKET",
+      id: id,
+      names: names,
+      location: location,
+      issue: issue
+    }
+    dispatch(action);
+    this.setState({formVisibleOnPage: false});
   }
 
   handleFormReset = () => {
@@ -78,9 +65,13 @@ class TicketControl extends React.Component{
   }
 
   handleDeleteTicket = (id) => {
-    const newMainTicketList = this.state.mainTicketList.filter(ticket => ticket.id !== id);
+    const { dispatch } = this.props;
+    const action = {
+      type: "DELETE_TICKET",
+      id: id
+    }
+    dispatch(action);
     this.setState({
-      mainTicketList: newMainTicketList,
       selectedTicket: null
     });
   }
@@ -91,11 +82,17 @@ class TicketControl extends React.Component{
   }
 
   handleEditingTicketInList = (ticketToEdit) => {
-    const editedMainTicketList = this.state.mainTicketList
-      .filter(ticket => ticket.id !== this.state.selectedTicket.id)
-      .concat(ticketToEdit);
+    const { dispatch } = this.props;
+    const { id, names, location, issue } = newTicketToEdit;
+    const action = {
+      type: "ADD_TICKET",
+      id: id,
+      names: names,
+      location, location,
+      issue: issue
+    }
+    dispatch(action);
     this.setState({
-      mainTicketList: editedMainTicketList,
       editing: false,
       selectedTicket: null
     });
@@ -127,27 +124,9 @@ class TicketControl extends React.Component{
       buttonText = "Return To Ticket List";
       button = <button onClick={this.handleClick}>{buttonText}</button>
     } else if (this.state.formVisibleOnPage) {
-        
-      if (!this.state.helpQuestionOne) {
-          currentlyVisibleState = <HelpQuestionOne />;
-          buttonText = "Yes";
-          button = <button onClick={this.handleQ1Click}>{buttonText}</button>;
-          buttonNo = <button onClick={this.handleFormReset}>No</button>;
-        } else if (!this.state.helpQuestionTwo) {
-          currentlyVisibleState = <HelpQuestionTwo />;
-          buttonText = "Yes";
-          button = <button onClick={this.handleQ2Click}>{buttonText}</button>;
-          buttonNo = <button onClick={this.handleFormReset}>No</button>;
-        } else if (!this.state.helpQuestionThree) {
-          currentlyVisibleState = <HelpQuestionThree />;
-          buttonText = "Yes";
-          button = <button onClick={this.handleQ3Click}>{buttonText}</button>;
-          buttonNo = <button onClick={this.handleFormReset}>No</button>;
-        } else {
           currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList} />;
           buttonText = "Return to Ticket List";
           button = <button onClick={this.handleFormReset}>{buttonText}</button>;
-        }
     } else {
         currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} onTicketSelection={this.handleChangingSelectedTicket} />;
         buttonText = "Add Ticket";
@@ -167,5 +146,7 @@ class TicketControl extends React.Component{
   }
 
 }
+
+TicketControl = connect()(TicketControl);
 
 export default TicketControl;
