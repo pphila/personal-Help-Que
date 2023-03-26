@@ -1,12 +1,10 @@
 import React from "react";
-import HelpQuestionOne from "./HelpQuestionOne";
-import HelpQuestionTwo from "./HelpQuestionTwo";
-import HelpQuestionThree from "./HelpQuestionThree";
 import NewTicketForm from "./NewTicketForm";
 import TicketList from "./TicketList";
 import TicketDetail from "./TicketDetail";
 import EditTicketForm from "./EditTicketForm";
 import { connect } from 'react-redux';
+import PropTypes from "prop-types";
 
 class TicketControl extends React.Component{
 
@@ -19,7 +17,6 @@ class TicketControl extends React.Component{
       selectedTicket: null,
       editing: false
     };
-    this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick = () => {
@@ -60,7 +57,7 @@ class TicketControl extends React.Component{
   }
 
   handleChangingSelectedTicket = (id) => {
-    const selectedTicket = this.state.mainTicketList.filter(ticket => ticket.id === id)[0];
+    const selectedTicket = this.props.mainTicketList[id];
     this.setState({selectedTicket: selectedTicket});
   }
 
@@ -83,12 +80,12 @@ class TicketControl extends React.Component{
 
   handleEditingTicketInList = (ticketToEdit) => {
     const { dispatch } = this.props;
-    const { id, names, location, issue } = newTicketToEdit;
+    const { id, names, location, issue } = ticketToEdit;
     const action = {
       type: "ADD_TICKET",
       id: id,
       names: names,
-      location, location,
+      location: location,
       issue: issue
     }
     dispatch(action);
@@ -101,8 +98,6 @@ class TicketControl extends React.Component{
   render(){
     let currentlyVisibleState = null;
     let buttonText = null;
-    let button = null;
-    let buttonNo = null;
 
     const buttonStyles = {
       padding: '50px',
@@ -115,31 +110,25 @@ class TicketControl extends React.Component{
                                 ticket = {this.state.selectedTicket}
                                 onEditTicket = {this.handleEditingTicketInList} />
       buttonText= "Return to Ticket List";
-      button = <button onClick={this.handleClick}>{buttonText}</button>
     } else if (this.state.selectedTicket != null) {
       currentlyVisibleState = <TicketDetail 
                                 ticket = {this.state.selectedTicket} 
                                 onClickingDelete = {this.handleDeleteTicket} 
                                 onClickingEdit = {this.handleEditClick} />
       buttonText = "Return To Ticket List";
-      button = <button onClick={this.handleClick}>{buttonText}</button>
     } else if (this.state.formVisibleOnPage) {
           currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList} />;
           buttonText = "Return to Ticket List";
-          button = <button onClick={this.handleFormReset}>{buttonText}</button>;
     } else {
-        currentlyVisibleState = <TicketList ticketList={this.state.mainTicketList} onTicketSelection={this.handleChangingSelectedTicket} />;
+        currentlyVisibleState = <TicketList ticketList={this.props.mainTicketList} onTicketSelection={this.handleChangingSelectedTicket} />;
         buttonText = "Add Ticket";
-        button = <button onClick={this.handleClick}>{buttonText}</button>
     }
 
     return (
       <React.Fragment>
         <div style={buttonStyles}>
           {currentlyVisibleState}
-          {button}
-          <br />
-          {buttonNo}
+          <button onClick={this.handleClick}>{buttonText}</button>
         </div>
       </React.Fragment>
     );
@@ -147,6 +136,16 @@ class TicketControl extends React.Component{
 
 }
 
-TicketControl = connect()(TicketControl);
+TicketControl.propTypes = {
+  mainTicketList: PropTypes.object
+};
+
+const mapStateToProps = state => {
+  return {
+    mainTicketList: state
+  }
+}
+
+TicketControl = connect(mapStateToProps)(TicketControl);
 
 export default TicketControl;

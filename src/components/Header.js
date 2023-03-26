@@ -11,7 +11,7 @@ function Header() {
     <React.Fragment>
       <div style={headerStyling}>
         <h1>Help Queue</h1>
-        <img src={ticketsImage} alt="An image of tickets"/>
+        <img src={ticketsImage} alt=""/>
       </div>
     </React.Fragment>
   );
