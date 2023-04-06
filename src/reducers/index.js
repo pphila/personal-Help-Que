@@ -3,7 +3,7 @@ import ticketListReducer from "./ticket-list-reducer";
 import { combineReducers } from "redux";
 
 const rootReducer = combineReducers({
-  formVisibleReducer: formVisibleReducer,
+  formVisibleOnPage: formVisibleReducer,
   mainTicketList: ticketListReducer
 })
 

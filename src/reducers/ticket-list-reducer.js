@@ -2,6 +2,7 @@ import * as c from './../actions/ActionTypes';
 
 const reducer = (state = {}, action) => {
   const { names, location, issue, id, formattedWaitTime, timeOpen } = action;
+  
   switch (action.type) {
     case c.ADD_TICKET:
       return Object.assign({}, state, {

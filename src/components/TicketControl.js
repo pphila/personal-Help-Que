@@ -6,16 +6,13 @@ import TicketDetail from "./TicketDetail";
 import EditTicketForm from "./EditTicketForm";
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
-import { formatDistanceToNow } from "date-fns";
+// import { formatDistanceToNow } from "date-fns";
 
 class TicketControl extends React.Component{
 
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
-      // formVisibleOnPage: false,
-      // mainTicketList: [],
       selectedTicket: null,
       editing: false
     };
@@ -121,7 +118,7 @@ class TicketControl extends React.Component{
                                 onClickingDelete = {this.handleDeleteTicket} 
                                 onClickingEdit = {this.handleEditClick} />
       buttonText = "Return To Ticket List";
-    } else if (this.state.formVisibleOnPage) {
+    } else if (this.props.formVisibleOnPage) {
           currentlyVisibleState = <NewTicketForm onNewTicketCreation={this.handleAddingNewTicketToList} />;
           buttonText = "Return to Ticket List";
     } else {
@@ -147,10 +144,10 @@ TicketControl.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    mainTicketList: state
+    mainTicketList: state.mainTicketList,
+    formVisibleOnPage: state.formVisibleOnPage
   }
 }
 
 TicketControl = connect(mapStateToProps)(TicketControl);
-
 export default TicketControl;
