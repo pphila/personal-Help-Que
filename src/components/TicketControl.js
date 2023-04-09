@@ -26,7 +26,7 @@ function TicketControl() {
   const [editing, setEditing] = useState(false);
 
   const handleClick = () => {
-  if (this.state.selectedTicket != null){
+  if (selectedTicket != null){
     setFormVisibleOnPage(false); //new code
     setSelectedTicket(null);
     setEditing(false);
