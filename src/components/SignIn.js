@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from './../firebase.js';
 import React, { useState } from 'react';
 
@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 export default function SignIn() {
   const [signUpSuccess, setSignUpSuccess] = useState(null);
   const [signInSuccess, setSignInSuccess] = useState(null);
+  const [signOutSuccess, setSignOutSuccess] = useState(null);
 
   
   function doSignUp(e) {
@@ -23,20 +24,27 @@ export default function SignIn() {
 
   function doSignIn(e) {
     e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    const email = e.target.signinEmail.value;
+    const password = e.target.signinPassword.value;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         setSignInSuccess(`You've successfully signed in ${userCredential.user.email}!`)
       })
       .catch((error) => {
         setSignInSuccess(`There was an error signing in: ${error.message}!`)
+      });
+  }
+
+  function doSignOut() {
+    signOut(auth)
+      .then(function() {
+        setSignOutSuccess("You have successfully signed out");
+      })
+      .catch(function(error) {
+        setSignOutSuccess(`There was an error signing out: ${error.message}`);
       })
   }
 
-
-
-  
   return (
     <>
       <h1>Sign Up</h1>
@@ -56,11 +64,21 @@ export default function SignIn() {
       <h1>Sign In</h1>
       {signInSuccess}
       <form onSubmit={doSignIn}>
-      <input type="text" name="siginEmail" placeholder='email'/>
-      <input type="password" name="siginPassword" placeholder='password'/>
+      <input 
+        type="text"
+        name="signinEmail" 
+        placeholder='email'/>
+      <input 
+        type="password" 
+        name="signinPassword" 
+        placeholder='password'/>
       <button type='submit'>Sign In</button>
       </form>
 
+      <h1>Sign Out</h1>
+      {signOutSuccess}
+      <br />
+      <button onClick={doSignOut}>Sign Out</button>
     </>
   );
 }
