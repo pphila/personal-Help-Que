@@ -4,7 +4,8 @@ import TicketList from "./TicketList";
 import TicketDetail from "./TicketDetail";
 import EditTicketForm from "./EditTicketForm";
 import { db, auth } from './../firebase.js'
-import { collection, addDoc, doc, onSnapshot, deleteDoc, updateDoc } from "firebase/firestore";
+import { formatDistanceToNow } from "date-fns";
+import { collection, addDoc, doc, onSnapshot, deleteDoc, updateDoc, query, orderBy } from "firebase/firestore";
 
 function TicketControl() {
   const [formVisibleOnPage, setFormVisibleOnPage] = useState(false);
@@ -14,13 +15,24 @@ function TicketControl() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const unSubscribe = onSnapshot(
+    const queryByTimestamp = query(
       collection(db, "tickets"),
-      (collectionSnapshot) => {
+      orderBy("timeOpen")
+    );
+    
+    const unSubscribe = onSnapshot(
+      queryByTimestamp,
+      (querySnapshot) => {
         const tickets = [];
-        collectionSnapshot.forEach((doc) => {
+        querySnapshot.forEach((doc) => {
+          const timeOpen = doc.get('timeOpen', {serverTimestamps: 'estimate'}).toDate();
+          const jsDate = new Date(timeOpen);
           tickets.push({
-            ...doc.data(),
+            names: doc.data().names,
+            location: doc.data().location,
+            issue: doc.data().issue,
+            timeOpen: jsDate,
+            formattedWaitTime: formatDistanceToNow(jsDate),
             id: doc.id
           });
         });
@@ -32,6 +44,24 @@ function TicketControl() {
     );
     return () => unSubscribe();
   }, []);
+
+  useEffect(() => {
+    function updateTicketElapsedWaitTime() {
+      const newMainTicketList = mainTicketList.map(ticket => {
+        const newFormattedWaitTime = formatDistanceToNow(ticket.timeOpen);
+        return{...ticket, formattedWaitTime: newFormattedWaitTime};
+      });
+      setMainTicketList(newMainTicketList);
+    }
+    const waitTimeUpdateTimer = setInterval(() => 
+    updateTicketElapsedWaitTime(),
+    60000
+    );
+
+    return function cleanup() {
+      clearInterval(waitTimeUpdateTimer);
+    }
+  }, [mainTicketList])
 
   const handleClick = () => {
   if (selectedTicket != null){

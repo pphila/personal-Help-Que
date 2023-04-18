@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReusableForm from "./ReusableForm";
+import { serverTimestamp } from "firebase/firestore";
 
 function NewTicketForm(props){
   const formStyling = {
@@ -13,6 +14,7 @@ function NewTicketForm(props){
       names: e.target.names.value,
       location: e.target.location.value,
       issue: e.target.issue.value,
+      timeOpen: serverTimestamp()
     });
   }
   
