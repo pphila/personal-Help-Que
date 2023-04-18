@@ -3,7 +3,7 @@ import NewTicketForm from "./NewTicketForm";
 import TicketList from "./TicketList";
 import TicketDetail from "./TicketDetail";
 import EditTicketForm from "./EditTicketForm";
-import { db } from './../firebase.js'
+import { db, auth } from './../firebase.js'
 import { collection, addDoc, doc, onSnapshot, deleteDoc, updateDoc } from "firebase/firestore";
 
 function TicketControl() {
@@ -68,41 +68,47 @@ function TicketControl() {
     setSelectedTicket(null);
   }
 
-  
-  let currentlyVisibleState = null;
-  let buttonText = null;
-
   const buttonStyles = {
       padding: '50px',
       margin: '200px',
       alignElements: 'center'
   }
+
+  if (auth.currentUser == null){
+    return(
+      <>
+        <h1>You must be signed in to access the queue</h1>
+      </>
+    )
+  } else if (auth.currentUser !=null){
+    let currentlyVisibleState = null;
+    let buttonText = null ;
   
-  if(error) {
-    currentlyVisibleState = <p>There was an error: {error}</p>
-  } else if (editing){
-      currentlyVisibleState = <EditTicketForm 
-                                ticket = {selectedTicket}
-                                onEditTicket = {handleEditingTicketInList} />
-      buttonText= "Return to Ticket List";
-  } else if (selectedTicket != null) {
-      currentlyVisibleState = <TicketDetail 
-                                ticket = {selectedTicket} 
-                                onClickingDelete = {handleDeleteTicket} 
-                                onClickingEdit = {handleEditClick} />
-      buttonText = "Return To Ticket List";
-  } else if (formVisibleOnPage) {
-        currentlyVisibleState = 
-        <NewTicketForm 
-          onNewTicketCreation={handleAddingNewTicketToList} />;
-        buttonText = "Return to Ticket List";
-  } else {
-        currentlyVisibleState = 
-        <TicketList 
-          ticketList={mainTicketList} 
-          onTicketSelection={handleChangingSelectedTicket} />;
-        buttonText = "Add Ticket";
-  }
+    if(error) {
+      currentlyVisibleState = <p>There was an error: {error}</p>
+    } else if (editing){
+        currentlyVisibleState = <EditTicketForm 
+                                  ticket = {selectedTicket}
+                                  onEditTicket = {handleEditingTicketInList} />
+        buttonText= "Return to Ticket List";
+    } else if (selectedTicket != null) {
+        currentlyVisibleState = <TicketDetail 
+                                  ticket = {selectedTicket} 
+                                  onClickingDelete = {handleDeleteTicket} 
+                                  onClickingEdit = {handleEditClick} />
+        buttonText = "Return To Ticket List";
+    } else if (formVisibleOnPage) {
+          currentlyVisibleState = 
+          <NewTicketForm 
+            onNewTicketCreation={handleAddingNewTicketToList} />;
+          buttonText = "Return to Ticket List";
+    } else {
+          currentlyVisibleState = 
+          <TicketList 
+            ticketList={mainTicketList} 
+            onTicketSelection={handleChangingSelectedTicket} />;
+          buttonText = "Add Ticket";
+    }
 
     return (
       <React.Fragment>
@@ -112,7 +118,7 @@ function TicketControl() {
         </div>
       </React.Fragment>
     );
-
+  }
 }
 
 export default TicketControl;
