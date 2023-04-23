@@ -3,6 +3,7 @@ import NewTicketForm from "./NewTicketForm";
 import TicketList from "./TicketList";
 import TicketDetail from "./TicketDetail";
 import EditTicketForm from "./EditTicketForm";
+import { ThemeContext } from "../context/theme-context";
 
 class TicketControl extends React.Component{
 
@@ -74,12 +75,15 @@ class TicketControl extends React.Component{
   render(){
     let currentlyVisibleState = null;
     let buttonText = null;
-    let button = null;
+    let theme = this.context;
 
     const buttonStyles = {
-      padding: '50px',
-      margin: '200px',
-      alignElements: 'center'
+      padding: '4px',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      
+      backgroundColor: theme.buttonBackground,
+      color: theme.textColor
     }
     
     if (this.state.editing){
@@ -103,14 +107,16 @@ class TicketControl extends React.Component{
 
     return (
       <React.Fragment>
-        <div style={buttonStyles}>
+        <div>
           {currentlyVisibleState}
-          <button onClick={this.handleClick}>{buttonText}</button>
+          <button style={buttonStyles} onClick={this.handleClick}>{buttonText}</button>
         </div>
       </React.Fragment>
     );
   }
 
 }
+
+TicketControl.contextType = ThemeContext;
 
 export default TicketControl;

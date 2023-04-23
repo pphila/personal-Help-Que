@@ -2,11 +2,16 @@ import React from "react";
 import PropTypes from 'prop-types';
 
 export default function ToggleTheme(props) {
-  const { toggleTheme } = props;
+  const { theme, toggleTheme } = props;
   
+  const styles = {
+    backgroundColor: theme.buttonBackground,
+    color: theme.textColor
+  }
+
   return (
     <>
-      <button onClick={toggleTheme}>Toggle Theme</button>
+      <button styles={styles} onClick={toggleTheme}>{theme.textColor === "AntiqueWhite" ? "toggle light theme" : "toggle dark theme"}</button>
       <hr/>
     </>
   )
